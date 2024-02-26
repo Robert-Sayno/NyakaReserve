@@ -5,7 +5,7 @@ include('../auth/connection.php');
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-    // Retrieve form data and sanitize input
+    // Retrieve form data and sanitize input (using mysqli_real_escape_string)
     $activity = mysqli_real_escape_string($conn, $_POST['activity']);
     $days = mysqli_real_escape_string($conn, $_POST['days']);
     $place = mysqli_real_escape_string($conn, $_POST['place']);
@@ -44,23 +44,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         // File upload successful
         $uploadedFilePath = $targetFile;
 
-       // Insert data into the tours table
-       $sql = "INSERT INTO tours (activity, days, place, amount, courtesy_photo) VALUES ('$activity', '$days', '$place', '$amount', '$uploadedFilePath')";
+        // Prepare SQL statement (using prepared statements can be secure)
+        $sql = "INSERT INTO tours (activity, days, place, amount, courtesy_photo) VALUES (?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $sql);
 
-       if (mysqli_query($conn, $sql)) {
-           echo "<script>alert('Tour added successfully!');</script>";
-           echo "<script>window.location.replace('add_tours.php');</script>";
-           exit();
-       } else {
-           echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
-           echo "<script>window.location.replace('add_tours.php');</script>";
-           exit();
-       }
-   } else {
-       echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
-       echo "<script>window.location.replace('add_tours.php');</script>";
-       exit();
-   }
+        // Bind values to prepare statement
+        mysqli_stmt_bind_param($stmt, "sssss", $activity, $days, $place, $amount, $uploadedFilePath);
+
+        // Execute prepared statement
+        if (mysqli_stmt_execute($stmt)) {
+            echo "<script>alert('Tour added successfully!');</script>";
+            echo "<script>window.location.replace('add_tours.php');</script>";
+            exit();
+        } else {
+            $error_message = "Error: " . mysqli_error($conn);
+            echo "<script>alert('$error_message');</script>";
+            echo "<script>window.location.replace('add_tours.php');</script>";
+            exit();
+        }
+
+        // Close the prepared statement
+        mysqli_stmt_close($stmt);
+    } else {
+        echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
+        echo "<script>window.location.replace('add_tours.php');</script>";
+        exit();
+    }
 }
 
 // Close the database connection
