@@ -4,120 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Your existing styles go here */
         body {
-            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-        }
-
-        header {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-        }
-
-        nav {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            height: 100vh;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
+        video {
+            position: fixed;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        nav ul li {
-            margin-right: 20px;
-        }
-
-        .booking-section {
-            max-width: 800px;
-            margin: 50px auto;
+        #landing-container {
             text-align: center;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        label {
-            margin-top: 10px;
-        }
-
-        input, select {
-            margin-bottom: 15px;
-            padding: 8px;
-        }
-
-        button {
-            padding: 10px;
-            background-color: #333;
             color: white;
-            border: none;
-            cursor: pointer;
+            padding: 100px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            z-index: 1;
         }
 
-        button:hover {
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        #links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            animation: fadeInUp 2s ease-out;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            background-color: #333;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
             background-color: #555;
         }
 
-        label {
-            margin-top: 10px;
-        }
-
-        input, select {
-            margin-bottom: 15px;
-            padding: 8px;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
-    <title>Nyakabale Safaris - Home</title>
+    <title>Nyakabale Safaris</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <!-- Your navigation bar goes here -->
-            <div class="logo">Nyakabale Safaris</div>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Tours</a></li>
-                <li><a href="#">About Us</a></li>
-                <!-- Add more navigation links as needed -->
-            </ul>
-        </nav>
-    </header>
+    <video autoplay muted loop>
+        <!-- Replace 'your-video.mp4' with the path to your video file -->
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
-    <section class="booking-section">
-        <h1>Book Your Safari Adventure</h1>
-        <form action="booking.php" method="post">
-            <!-- Your existing form fields go here -->
-            <label for="tour">Select Tour:</label>
-            <select name="tour" id="tour" required>
-                <option value="tour1">Tour 1</option>
-                <option value="tour2">Tour 2</option>
-                <!-- Add more options based on available tours -->
-            </select>
-
-            <label for="date">Select Date:</label>
-            <input type="date" name="date" id="date" required>
-
-            <label for="participants">Number of Participants:</label>
-            <input type="number" name="participants" id="participants" required>
-
-            <!-- New input fields for contact phone number and customer email -->
-            <label for="phone">Contact Phone Number:</label>
-            <input type="tel" name="phone" id="phone" required>
-
-            <label for="email">Customer Email:</label>
-            <input type="email" name="email" id="email" required>
-
-            <button type="submit">Book Now</button>
-        </form>
-    </section>
+    <div id="landing-container">
+        <h1>Welcome to Nyakabale Safaris</h1>
+        <div id="links">
+            <a href="#">Home</a>
+            <a href="#">Tours</a>
+            <a href="#">About Us</a>
+            <a href="#">Log out</a>
+            <!-- Add more links as needed -->
+        </div>
+    </div>
 </body>
 </html>
