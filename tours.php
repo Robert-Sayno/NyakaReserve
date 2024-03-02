@@ -42,46 +42,50 @@
         }
 
         section {
-            max-width: 800px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            max-width: 1200px;
             margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .tour {
-            margin-bottom: 20px;
-            padding: 20px;
+        .card {
+            flex: 0 1 calc(33.33% - 20px);
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #fff;
+            margin: 10px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
         }
 
-        .booking-form {
-            display: flex;
-            flex-direction: column;
-            margin-top: 20px;
+        .card:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        .booking-form label {
-            margin-bottom: 5px;
+        .card h2 {
+            margin: 10px;
         }
 
-        .booking-form input {
-            margin-bottom: 15px;
-            padding: 8px;
+        .card p {
+            margin: 5px 10px;
         }
 
-        .booking-form button {
+        .book-btn {
+            display: block;
+            margin: 10px;
             padding: 10px;
             background-color: #333;
             color: white;
+            text-align: center;
+            text-decoration: none;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .booking-form button:hover {
+        .book-btn:hover {
             background-color: #555;
         }
     </style>
@@ -93,20 +97,21 @@
             <a href="#">Home</a>
             <a href="#">Tours</a>
             <a href="#">About Us</a>
-            <a href="#">Contact Us</a>
-            <!-- Add more links as needed -->
         </nav>
     </header>
 
     <section>
         <?php
-        $host = 'your_host';
-        $username = 'your_username';
-        $password = 'your_password';
-        $database = 'your_database';
+        // Database connection details
+        $servername = 'localhost';
+        $username = 'root';
+        $password = '';
+        $dbname = 'NyakaReserve';
 
-        $conn = new mysqli($host, $username, $password, $database);
+        // Create connection
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
+        // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
@@ -123,18 +128,15 @@
                 $place = $row['place'];
                 $amount = $row['amount'];
 
-                echo '<div class="tour">';
+                // Display tour information in a card layout
+                echo '<div class="card">';
                 echo "<h2>$activity</h2>";
                 echo "<p><strong>Days:</strong> $days</p>";
                 echo "<p><strong>Place:</strong> $place</p>";
                 echo "<p><strong>Amount:</strong> $amount</p>";
 
-                // Booking form
-                echo '<div class="booking-form">';
-                echo "<label for='participants'>Number of Participants:</label>";
-                echo "<input type='number' id='participants' name='participants' required>";
-                echo "<button onclick='bookTour($tour_id)'>Book Now</button>";
-                echo '</div>';
+                // Booking button with a link to the booking page for each tour
+                echo "<a class='book-btn' href='booking.php?tour_id=$tour_id'>Book Now</a>";
 
                 echo '</div>';
             }
@@ -145,12 +147,5 @@
         $conn->close();
         ?>
     </section>
-
-    <script>
-        function bookTour(tourId) {
-            // You can add JavaScript logic to handle the booking process
-            alert("Booking logic goes here for tour ID: " + tourId);
-        }
-    </script>
 </body>
 </html>

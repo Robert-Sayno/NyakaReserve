@@ -1,105 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+<?php
+// Database connection details
+// Database connection parameters
+$servername = 'localhost';
+$username = 'root';
+$password = '';
+$dbname = 'NyakaReserve';
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-        }
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Collect form data
+  $activity = $_POST["activity"];
+  $days = $_POST["days"];
+  $place = $_POST["place"];
 
-        nav ul {
-            list-style: none;
-            display: flex;
-        }
+  // Remove non-numeric characters from amount
+  $amount = filter_var($_POST["amount"], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-        nav ul li {
-            margin-right: 20px;
-        }
+  // Get full path of the uploaded image
+  $targetDirectory = __DIR__ . "/uploads/"; // Absolute path using __DIR__
+  $filename = basename($_FILES["courtesyPhoto"]["name"]);
+  $targetFile = $targetDirectory . $filename;
 
-        .booking-section {
-            max-width: 800px;
-            margin: 50px auto;
-            text-align: center;
-        }
+  // Move the file to the target directory
+  move_uploaded_file($_FILES["courtesyPhoto"]["tmp_name"], $targetFile);
 
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+  // Build database query with full path
+  $sql = "INSERT INTO tours (activity, days, place, amount, courtesy_photo) VALUES ('$activity', $days, '$place', $amount, '$targetFile')";
 
-        label {
-            margin-top: 10px;
-        }
+  if ($conn->query($sql) === TRUE) {
+    echo "Tour added successfully";
+  } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+}
 
-        input, select {
-            margin-bottom: 15px;
-            padding: 8px;
-        }
-
-        button {
-            padding: 10px;
-            background-color: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #555;
-        }
-    </style>
-    <title>Nyakabale Safaris - Home</title>
-</head>
-<body>
-    <header>
-        <nav>
-            <div class="logo">Nyakabale Safaris</div>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Tours</a></li>
-                <li><a href="#">About Us</a></li>
-                <!-- Add more navigation links as needed -->
-            </ul>
-        </nav>
-    </header>
-
-    <section class="booking-section">
-        <h1>Book Your Safari Adventure</h1>
-        <form action="booking.php" method="post">
-            <!-- Your booking form fields go here -->
-            <label for="tour">Select Tour:</label>
-            <select name="tour" id="tour" required>
-                <option value="tour1">Tour 1</option>
-                <option value="tour2">Tour 2</option>
-                <!-- Add more options based on available tours -->
-            </select>
-
-            <label for="date">Select Date:</label>
-            <input type="date" name="date" id="date" required>
-
-            <label for="participants">Number of Participants:</label>
-            <input type="number" name="participants" id="participants" required>
-
-            <button type="submit">Book Now</button>
-        </form>
-    </section>
-</body>
-</html>
+// Close the database connection
+$conn->close();
+?>

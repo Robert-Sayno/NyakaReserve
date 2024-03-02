@@ -3,7 +3,7 @@
 $server = 'localhost';
 $username = 'root';
 $password = '';
-$database = 'marvel_driving_school_db';
+$database = 'NyakaReserve';
 
 // Create a new mysqli connection using the provided parameters
 $conn = new mysqli($server, $username, $password, $database);

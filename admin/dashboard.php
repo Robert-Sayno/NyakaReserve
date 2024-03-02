@@ -15,17 +15,6 @@ if ($result_users) {
     die('Error fetching users: ' . mysqli_error($conn));
 }
 
-// Fetch properties from the database
-$sql_properties = "SELECT * FROM properties";
-$result_properties = mysqli_query($conn, $sql_properties);
-
-// Check if the query was successful
-if ($result_properties) {
-    $properties = mysqli_fetch_all($result_properties, MYSQLI_ASSOC);
-} else {
-    // Handle the error, you can customize this part based on your needs
-    die('Error fetching properties: ' . mysqli_error($conn));
-}
 
 // Fetch messages from the database
 $sql_messages = "SELECT * FROM contact_messages";
@@ -157,72 +146,6 @@ mysqli_close($conn);
             </table>
         </div>
 
-        <!-- Display properties in a table -->
-      <!-- Display properties in a table -->
-<div class="dashboard-section">
-    <h3>Properties</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Property ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Location</th>
-                <th>Contact Info</th>
-                <th>Image</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($properties as $property) : ?>
-                <tr>
-                    <td><?php echo $property['id']; ?></td>
-                    <td><?php echo $property['property_name']; ?></td>
-                    <td><?php echo $property['property_description']; ?></td>
-                    <td><?php echo $property['found_location']; ?></td>
-                    <td><?php echo $property['contact_info']; ?></td>
-                    <td>
-                        <img src="<?php echo '../uploads/' . basename($property['image_path']); ?>" alt="Property Image" class="property-image">
-                    </td>
-                    <td>
-                        <form action="update_property_status.php" method="post" class="updateStatusForm">
-                            <input type="hidden" name="property_id" value="<?php echo $property['id']; ?>">
-                            <select name="status" onchange="updatePropertyStatus(this.value, <?php echo $property['id']; ?>)">
-                                <option value="pending" <?php echo ($property['status'] == 'pending') ? 'selected' : ''; ?>>Pending</option>
-                                <option value="published" <?php echo ($property['status'] == 'published') ? 'selected' : ''; ?>>Published</option>
-                            </select>
-                        </form>
-                    </td>
-                    <td>
-                        <a href="edit_property.php?id=<?php echo $property['id']; ?>">Edit</a>
-                        <a href="delete_property.php?id=<?php echo $property['id']; ?>">Delete</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<!-- ... (Your existing HTML body) ... -->
-
-<script>
-    function updatePropertyStatus(status, propertyId) {
-        if (confirm('Are you sure you want to update the property status?')) {
-            // Use AJAX to update property status without submitting the entire form
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "update_property_status.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Handle the response, you can show an alert or update the UI as needed
-                    alert('Property status updated successfully.');
-                }
-            };
-            xhr.send("property_id=" + propertyId + "&status=" + status);
-        }
-    }
-</script>
 </div>
 
         <!-- Display messages in a table -->

@@ -72,6 +72,7 @@
 </form>
 
 <?php
+
 // Database connection parameters
 $server = 'localhost';
 $username = 'root';
