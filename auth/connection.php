@@ -3,7 +3,7 @@
 $server = 'localhost';
 $username = 'root';
 $password = '';
-$database = 'NyakaReserve';
+$database = 'marvel_driving_school_db';
 
 // Check if there is a POST request (Note: This condition might need further clarification)
 if (isset($_POST)) {
