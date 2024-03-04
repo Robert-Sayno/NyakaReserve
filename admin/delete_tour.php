@@ -13,6 +13,7 @@ $tour_id = $_GET['tour_id'];
 // Delete tour from the tours table
 $sql = "DELETE FROM tours WHERE tour_id = $tour_id";
 
+
 if ($conn->query($sql) === TRUE) {
     echo "Tour deleted successfully!";
 } else {

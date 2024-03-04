@@ -167,7 +167,7 @@ $conn->close();
     </div>
 
     <footer>
-        
+        &copy; 2024 NyakaReserve All rights reserved.
     </footer>
 </body>
 </html>
