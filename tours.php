@@ -1,151 +1,129 @@
-<!-- tours.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available Tours - Nyakabale Safaris</title>
+    <title>Tour Details</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            padding: 20px;
+            background-color: #f8f9fa;
         }
 
         header {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
-        }
-
-        nav {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: white;
-            padding: 10px 20px;
-            margin: 0 10px;
-            border-radius: 5px;
-            background-color: #555;
-            transition: background-color 0.3s;
-        }
-
-        nav a:hover {
-            background-color: #777;
-        }
-
-        section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            max-width: 1200px;
-            margin: 20px auto;
-        }
-
-        .card {
-            flex: 0 1 calc(33.33% - 20px);
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-            margin: 10px;
-            overflow: hidden;
-            transition: box-shadow 0.3s;
-        }
-
-        .card:hover {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .card h2 {
-            margin: 10px;
-        }
-
-        .card p {
-            margin: 5px 10px;
-        }
-
-        .book-btn {
-            display: block;
-            margin: 10px;
+            background-color: #343a40;
             padding: 10px;
-            background-color: #333;
-            color: white;
+            color: #fff;
             text-align: center;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            font-size: 24px;
         }
 
-        .book-btn:hover {
-            background-color: #555;
+        .tour-card {
+            width: 300px;
+            margin: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .tour-card:hover {
+            transform: scale(1.05);
+        }
+
+        .tour-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .tour-details {
+            text-align: left;
+        }
+
+        h3, p {
+            margin: 0;
+        }
+
+        .tour-price {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .book-link {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .book-link:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Available Tours</h1>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Tours</a>
-            <a href="#">About Us</a>
-        </nav>
-    </header>
 
-    <section>
-        <?php
-        // Database connection details
-        $servername = 'localhost';
-        $username = 'root';
-        $password = '';
-        $dbname = 'NyakaReserve';
+<header>
+    Explore Our Tours
+</header>
 
-        // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbname);
+<?php
+// Database connection parameters
+$server = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'NyakaReserve';
 
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
+// Create a new mysqli connection using the provided parameters
+$conn = new mysqli($server, $username, $password, $database);
 
-        // Fetch available tours from the database
-        $sql = "SELECT * FROM tours";
-        $result = $conn->query($sql);
+// Check if the connection was successful
+if ($conn->connect_error) {
+    // If the connection fails, terminate the script and display the MySQL error.
+    die("Connection failed: " . $conn->connect_error);
+}
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $tour_id = $row['tour_id'];
-                $activity = $row['activity'];
-                $days = $row['days'];
-                $place = $row['place'];
-                $amount = $row['amount'];
+// Assuming you have a database connection established ($conn)
 
-                // Display tour information in a card layout
-                echo '<div class="card">';
-                echo "<h2>$activity</h2>";
-                echo "<p><strong>Days:</strong> $days</p>";
-                echo "<p><strong>Place:</strong> $place</p>";
-                echo "<p><strong>Amount:</strong> $amount</p>";
+// Fetch tour details from the database
+$sql = "SELECT * FROM tours";
+$result = $conn->query($sql);
 
-                // Booking button with a link to the booking page for each tour
-                echo "<a class='book-btn' href='booking.php?tour_id=$tour_id'>Book Now</a>";
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // Display each tour as a card
+        $imagePath = 'admin/uploads/' . basename($row['tour_image']);
+        echo '<div class="tour-card">';
+        echo '<img src="' . $imagePath . '" alt="Tour Image" class="tour-image">';
+        echo '<div class="tour-details">';
+        echo '<h3>' . $row['tour_name'] . '</h3>';
+        echo '<p>' . $row['tour_description'] . '</p>';
+        echo '<p>Duration: ' . $row['tour_duration'] . '</p>';
+        echo '<p>Location: ' . $row['tour_location'] . '</p>';
+        echo '<p>Guide: ' . $row['tour_guide'] . '</p>';
+        echo '<p class="tour-price">$' . $row['tour_price'] . '</p>';
+        echo '<a href="#" class="book-link">Book Now</a>';
+        echo '</div>';
+        echo '</div>';
+    }
+} else {
+    echo '<p>No tours found.</p>';
+}
 
-                echo '</div>';
-            }
-        } else {
-            echo "No tours available.";
-        }
+// Close the database connection
+$conn->close();
+?>
 
-        $conn->close();
-        ?>
-    </section>
 </body>
 </html>

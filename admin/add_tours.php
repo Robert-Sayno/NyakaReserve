@@ -72,7 +72,6 @@
 </form>
 
 <?php
-
 // Database connection parameters
 $server = 'localhost';
 $username = 'root';
@@ -85,47 +84,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn = new mysqli($server, $username, $password, $database);
 
     // Check if the connection was successful
-    if ($conn) {
-        // Get form data
-        $tour_name = $_POST['tour_name'];
-        $tour_description = $_POST['tour_description'];
-        $tour_price = $_POST['tour_price'];
-        $tour_duration = $_POST['tour_duration'];
-        $tour_location = $_POST['tour_location'];
-        $tour_guide = $_POST['tour_guide'];
-
-        // Handle image upload
-        $targetDirectory = "uploads/"; // Specify the directory where you want to store uploaded images
-
-        // Create the uploads directory if it doesn't exist
-        if (!file_exists($targetDirectory)) {
-            mkdir($targetDirectory, 0777, true); // Create directory recursively with full permissions
-        }
-
-        $targetFile = $targetDirectory . basename($_FILES["tour_image"]["name"]);
-        
-        if (move_uploaded_file($_FILES["tour_image"]["tmp_name"], $targetFile)) {
-            // Image uploaded successfully, now insert the tour details into the database
-            $tour_image = $targetFile; // Store the image path in a variable to be inserted into the database
-
-            // Prepare SQL statement to insert data into the tours table
-            $sql = "INSERT INTO tours (tour_name, tour_description, tour_price, tour_duration, tour_location, tour_guide, tour_image) 
-                    VALUES ('$tour_name', '$tour_description', '$tour_price', '$tour_duration', '$tour_location', '$tour_guide', '$tour_image')";
-        
-            // Execute the SQL query
-            if ($conn->query($sql) === TRUE) {
-                echo "<p>New tour created successfully</p>";
-            } else {
-                echo "<p>Error: " . $sql . "<br>" . $conn->error . "</p>";
-            }
-        } else {
-            echo "<p>Sorry, there was an error uploading your file.</p>";
-        }
-    } else {
-        // If the connection fails, terminate the script and display the MySQL error.
-        die("<p>Connection failed: " . mysqli_connect_error() . "</p>");
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
+
+    // Get form data
+    $tour_name = $_POST['tour_name'];
+    $tour_description = $_POST['tour_description'];
+    $tour_price = $_POST['tour_price'];
+    $tour_duration = $_POST['tour_duration'];
+    $tour_location = $_POST['tour_location'];
+    $tour_guide = $_POST['tour_guide'];
+
+    // Handle image upload
+    $targetDirectory = "/opt/lampp/htdocs/NyakaReserve/admin/uploads/";
+
+    // Create the uploads directory if it doesn't exist
+    if (!file_exists($targetDirectory)) {
+        mkdir($targetDirectory, 0775, true); // Set the appropriate permission (read/write/execute for owner and group, read/execute for others)
+    }
+
+    $targetFile = $targetDirectory . basename($_FILES["tour_image"]["name"]);
+
+    if (move_uploaded_file($_FILES["tour_image"]["tmp_name"], $targetFile)) {
+        // Image uploaded successfully, now insert the tour details into the database
+        $tour_image = $targetFile;
+
+        // Prepare SQL statement to insert data into the tours table
+        $sql = "INSERT INTO tours (tour_name, tour_description, tour_price, tour_duration, tour_location, tour_guide, tour_image) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        // Use a prepared statement to prevent SQL injection
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssssss", $tour_name, $tour_description, $tour_price, $tour_duration, $tour_location, $tour_guide, $tour_image);
+
+        // Execute the SQL query
+        if ($stmt->execute()) {
+            echo "<p>New tour created successfully</p>";
+        } else {
+            echo "<p>Error: " . $stmt->error . "</p>";
+        }
+
+        // Close the statement
+        $stmt->close();
+    } else {
+        echo "<p>Sorry, there was an error uploading your file.</p>";
+    }
+
+    // Close the database connection
+    $conn->close();
 }
 ?>
+
 </body>
 </html>
