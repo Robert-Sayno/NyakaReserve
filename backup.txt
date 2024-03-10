@@ -104,6 +104,7 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         // Display each tour as a card
         $imagePath = 'admin/uploads/' . basename($row['tour_image']);
+    
         echo '<div class="tour-card">';
         echo '<img src="' . $imagePath . '" alt="Tour Image" class="tour-image">';
         echo '<div class="tour-details">';
@@ -113,7 +114,7 @@ if ($result->num_rows > 0) {
         echo '<p>Location: ' . $row['tour_location'] . '</p>';
         echo '<p>Guide: ' . $row['tour_guide'] . '</p>';
         echo '<p class="tour-price">$' . $row['tour_price'] . '</p>';
-        echo '<a href="#" class="book-link">Book Now</a>';
+        echo '<a href="book.php" class="book-link">Book Now</a>';
         echo '</div>';
         echo '</div>';
     }
