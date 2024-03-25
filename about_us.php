@@ -72,9 +72,9 @@
     <header>
         <h1>About Us</h1>
         <nav>
-            <a href="#">Home</a>
-            <a href="#">Tours</a>
-            <a href="#">About Us</a>
+            <a href="index.php">Home</a>
+            <a href="tours.php">Tours</a>
+            <a href="about_us.php">About Us</a>
             <!-- Add more links as needed -->
         </nav>
     </header>

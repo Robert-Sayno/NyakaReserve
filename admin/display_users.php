@@ -126,8 +126,8 @@ mysqli_close($conn);
                             <td><?php echo $user['username']; ?></td>
                             <td><?php echo (isset($user['active']) ? ($user['active'] ? 'Active' : 'Inactive') : 'N/A'); ?></td>
                             <td>
-                                <a href="edit_user.php?id=<?php echo $user['id']; ?>">Edit</a>
-                                <a href="delete_user.php?id=<?php echo $user['id']; ?>">Delete</a>
+                            <a href="edit_user.php?id=<?php echo $user['id']; ?>">Edit</a>
+    <a href="delete_user.php?id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -135,7 +135,8 @@ mysqli_close($conn);
             </table>
         </div>
 
-        <!-- Add more content specific to the Users section if needed -->
+        <!-- Add more content specific to the Users section if ne<a href="edit_user.php?id=<?php echo $user['id']; ?>">Edit</a>
+    <a href="delete_user.php?id=<?php echo $user['id']; ?>" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>eded -->
 
         <p><a class="logout-btn" href="logout.php">Logout</a></p>
     </div>

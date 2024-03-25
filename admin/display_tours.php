@@ -133,8 +133,8 @@ mysqli_close($conn);
                             <td><?php echo $tour['tour_guide']; ?></td>
                             <td><?php echo $tour['tour_price']; ?></td>
                             <td>
-                                <a href="edit_tour.php?id=<?php echo $tour['tour_id']; ?>">Edit</a>
-                                <a href="delete_tour.php?id=<?php echo $tour['tour_id']; ?>">Delete</a>
+                            <a href="edit_tour.php?id=<?php echo $tour['tour_id']; ?>">Edit</a>
+                            <a href="delete_tour.php?id=<?php echo $tour['tour_id']; ?>" onclick="return confirm('Are you sure you want to delete this tour?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
