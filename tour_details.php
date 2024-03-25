@@ -130,7 +130,8 @@
             echo '<p><strong>Location:</strong> ' . $row['tour_location'] . '</p>';
             echo '<p><strong>Guide:</strong> ' . $row['tour_guide'] . '</p>';
             echo '<p><strong>Price:</strong> $' . $row['tour_price'] . '</p>';
-            echo '<a href="book_tour.php?id=' . $tourId . '" class="book-link">Book Now</a>';
+            echo '<a href="#" class="book-link" onclick="confirmBooking(' . $tourId . ')">Book Now</a>';
+           
             echo '</div>';
         } else {
             echo '<p>No tour found with the specified ID.</p>';
@@ -140,6 +141,33 @@
         $conn->close();
         ?>
     </div>
+
+    
+    <script>
+        function confirmBooking(tourId) {
+            if (confirm("Are you sure you want to book this tour?")) {
+                // If the user confirms, send the tour ID to the server
+                bookTour(tourId);
+            }
+        }
+
+        function bookTour(tourId) {
+            // AJAX request to book the tour
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "confirm_booking.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle the response, e.g., show a success message
+                    alert(xhr.responseText);
+                }
+            };
+            // Send the tour ID to the server
+            xhr.send("tour_id=" + tourId);
+        }
+    </script>
+
+
 </body>
 
 </html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +19,24 @@
             color: #fff;
             text-align: center;
             font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .nav-links .user-info {
+            margin-left: auto;
         }
 
         .tour-card {
@@ -104,9 +123,26 @@
 <body>
 
 <header>
-    Explore Our Tours
+    <div class="nav-links">
+        <div>
+            <a href="#">Home</a>
+            <a href="#">Your Tours</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="user-info">
+            <?php
+            if (isset($_SESSION['name'])) {
+                echo '<span>Welcome, ' . $_SESSION['name'] . '</span>';
+                echo '<span>Email: ' . $_SESSION['email'] . '</span>';
+            } else {
+                echo '<a href="login.php">Login</a>';
+            }
+            ?>
+        </div>
+    </div>
 </header>
 
+<!-- Tour cards section -->
 <?php
 // Database connection parameters
 $server = 'localhost';
@@ -143,16 +179,14 @@ if ($result->num_rows > 0) {
         echo '<a href="tour_details.php?id=' . $row['tour_id'] . '" class="book-link">Book Now</a>';
         echo '</div>';
         echo '</div>';
-    }
-} else {
-    echo '<p>No tours found.</p>';
-}
-
-// Close the database connection
-$conn->close();
-?>
-
-
-
-</body>
-</html>
+        }
+        } else {
+            echo '<p>No tours found.</p>';
+        }
+        
+        // Close the database connection
+        $conn->close();
+        ?>
+        </body>
+        </html>
+        

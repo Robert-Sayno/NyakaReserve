@@ -7,10 +7,9 @@ session_start();
 
 // Check if the user is already logged in, redirect to home page
 if (isset($_SESSION['name'])) {
-    header('location: ../index.php');
+    header('location: ../tours.php');
     exit();
 }
-
 
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
@@ -37,7 +36,7 @@ if (isset($_POST['login'])) {
                 $_SESSION['username'] = $username;
                 $_SESSION['password'] = $hashedPassword; // You might not need to store the password in the session.
 
-                header('location:../index.php');
+                header('location:../tours.php');
                 exit;
             } else {
                 $_SESSION['error'] = 'Invalid Password';

@@ -89,10 +89,11 @@
     <div id="landing-container">
         <h1>Welcome to Nyakabale Safaris</h1>
         <div id="links">
-            <a href="index.php">Home</a>
-            <a href="tours.php">Book Tour</a>
+           
             <a href="about_us.php">About Us</a>
             <a href="contact_us.php">Contact Us</a>
+            <a href="auth/signup.php">signup</a>
+            <a href="auth/login.php">Login</a>
             <!-- Add more links as needed -->
         </div>
     </div>
