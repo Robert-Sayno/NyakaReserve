@@ -113,35 +113,42 @@
             die("Connection failed: " . $conn->connect_error);
         }
         
-        // Fetch tour details based on the tour ID from the URL
-        $tourId = $_GET['id'];
-        $sql = "SELECT * FROM tours WHERE tour_id = $tourId";
-        $result = $conn->query($sql);
-        
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            // Display the tour details
-            echo '<div class="tour-details">';
-            echo '<h2>Tour Details</h2>';
-            echo '<img src="admin/uploads/' . basename($row['tour_image']) . '" alt="Tour Image">';
-            echo '<p><strong>Name:</strong> ' . $row['tour_name'] . '</p>';
-            echo '<p><strong>Description:</strong> ' . $row['tour_description'] . '</p>';
-            echo '<p><strong>Duration:</strong> ' . $row['tour_duration'] . '</p>';
-            echo '<p><strong>Location:</strong> ' . $row['tour_location'] . '</p>';
-            echo '<p><strong>Guide:</strong> ' . $row['tour_guide'] . '</p>';
-            echo '<p><strong>Price:</strong> $' . $row['tour_price'] . '</p>';
-            echo '<a href="#" class="book-link" onclick="confirmBooking(' . $tourId . ')">Book Now</a>';
-           
-            echo '</div>';
-        } else {
-            echo '<p>No tour found with the specified ID.</p>';
-        }
-        
+       // Fetch tour details based on the tour ID from the URL
+if(isset($_GET['id'])) {
+    $tourId = isset($_GET['id']) ? $_GET['id'] : null;
+
+    $sql = "SELECT * FROM tours WHERE tour_id = $tourId";
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows > 0) {
+        // Tour found, display details
+        $row = $result->fetch_assoc();
+        // Display tour details...
+        echo '<div class="tour-details">';
+        echo '<h2>Tour Details</h2>';
+        echo '<img src="admin/uploads/' . basename($row['tour_image']) . '" alt="Tour Image">';
+        echo '<p><strong>Name:</strong> ' . $row['tour_name'] . '</p>';
+        echo '<p><strong>Description:</strong> ' . $row['tour_description'] . '</p>';
+        echo '<p><strong>Duration:</strong> ' . $row['tour_duration'] . '</p>';
+        echo '<p><strong>Location:</strong> ' . $row['tour_location'] . '</p>';
+        echo '<p><strong>Guide:</strong> ' . $row['tour_guide'] . '</p>';
+        echo '<p><strong>Price:</strong> $' . $row['tour_price'] . '</p>';
+        echo '<a href="confirm_booking.php?id=' . $tourId . '" class="book-link" onclick="confirmBooking(' . $tourId . ')">Book Now</a>';
+
+        echo '</div>';
+    } else {
+        // Tour not found with the specified ID
+        echo '<p>No tour found with the specified ID.</p>';
+    }
+} else {
+    // Tour ID not provided in the URL
+    echo '<p>Tour ID not provided!</p>';
+}
+
         // Close the database connection
         $conn->close();
         ?>
     </div>
-
     
     <script>
         function confirmBooking(tourId) {

@@ -3,8 +3,6 @@ session_start();
 include_once('connection.php');
 include_once('auth_functions.php');
 
-session_start();
-
 // Check if the user is already logged in, redirect to home page
 if (isset($_SESSION['name'])) {
     header('location: ../tours.php');
@@ -28,13 +26,15 @@ if (isset($_POST['login'])) {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $name = $row['name'];
+            $email = $row['email']; // Fetch the email from the database
             $hashedPassword = $row['password'];
 
             // Verify the password using password_verify
             if (password_verify($password, $hashedPassword)) {
                 $_SESSION['name'] = $name;
                 $_SESSION['username'] = $username;
-                $_SESSION['password'] = $hashedPassword; // You might not need to store the password in the session.
+                $_SESSION['email'] = $email; // Store the email in the session
+                // $_SESSION['password'] = $hashedPassword; // You might not need to store the password in the session.
 
                 header('location:../tours.php');
                 exit;

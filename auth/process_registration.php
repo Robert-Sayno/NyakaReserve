@@ -37,7 +37,7 @@ if(isset($_POST['register']))
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // SQL query to insert user information into the 'admins' table.
-    $sql = "INSERT INTO `admins`(`name`, `username`, `password`) VALUES ('$name','$username','$hashedPassword')";
+    $sql = "INSERT INTO `tbl_user`(`name`, `username`, `password`) VALUES ('$name','$username','$hashedPassword')";
     
     // Execute the SQL query.
     $result = mysqli_query($conn, $sql);
@@ -45,7 +45,7 @@ if(isset($_POST['register']))
     // Check if the query was successful.
     if($result) {
         // Redirect the user to the 'index.php' page upon successful registration.
-        header('location:../index.php');
+        header('location:login.php');
         // Display a JavaScript alert notifying the user of successful registration.
         echo "<script>alert('New User Register Success');</script>";   
     } else {

@@ -1,3 +1,12 @@
+<?php
+session_start();
+include_once('connection.php');
+include_once('auth_functions.php');
+
+
+?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -133,9 +142,9 @@
             <?php
             if (isset($_SESSION['name'])) {
                 echo '<span>Welcome, ' . $_SESSION['name'] . '</span>';
-                echo '<span>Email: ' . $_SESSION['email'] . '</span>';
+              
             } else {
-                echo '<a href="login.php">Login</a>';
+                echo '<a href="auth/login.php">Login</a>';
             }
             ?>
         </div>

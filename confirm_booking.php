@@ -1,59 +1,63 @@
 <?php
-// Database connection parameters
-$server = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'NyakaReserve';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Create a new mysqli connection using the provided parameters
-$conn = new mysqli($server, $username, $password, $database);
-
-// Check if the connection was successful
-if ($conn->connect_error) {
-    // If the connection fails, terminate the script and display the MySQL error.
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Check if the request method is POST and if the tour ID is set
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tour_id'])) {
-    // Get the tour ID from the POST data
-    $tourId = $_POST['tour_id'];
-
-    // Generate a random tracking number
-    $trackingNumber = generateTrackingNumber();
-
-    // Insert the booking details into the database
-    $insertQuery = "INSERT INTO bookings (tour_id, tracking_number) VALUES (?, ?)";
-    $stmt = $conn->prepare($insertQuery);
-    $stmt->bind_param("is", $tourId, $trackingNumber);
-
-    if ($stmt->execute()) {
-        echo "Tour booked successfully! Your tracking number is: " . $trackingNumber;
-    } else {
-        echo "Error booking tour: " . $conn->error;
-    }
-
-    // Close the prepared statement
-    $stmt->close();
+session_start();
+include_once('auth/connection.php');
+if (isset($_SESSION['email'])) {
+    echo "User is logged in with email: " . $_SESSION['email'];
+    // Rest of the code...
 } else {
-    echo "Invalid request.";
+    echo "User is not logged in.";
 }
 
-// Close the database connection
-$conn->close();
 
-// Function to generate a random tracking number
-function generateTrackingNumber()
-{
-    // Define characters that can be used in the tracking number
-    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+// Check if the tour ID is provided in the GET request
+if (isset($_GET['id'])) {
+    $tourId = $_GET['id'];
 
-    // Generate a random tracking number of length 8
-    $trackingNumber = '';
-    for ($i = 0; $i < 8; $i++) {
-        $trackingNumber .= $characters[rand(0, strlen($characters) - 1)];
+    // Check if the user email is set in the session
+    if (isset($_SESSION['email'])) {
+        $userEmail = $_SESSION['email']; // Get user email from the session
+
+        // Query the database to get the user ID and other details based on the email
+        $getUserSql = "SELECT user_id, name FROM users WHERE email = ?";
+        $stmt = $conn->prepare($getUserSql);
+        $stmt->bind_param("s", $userEmail);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // User found, retrieve user details
+            $user = $result->fetch_assoc();
+            $userId = $user['user_id'];
+            $userName = $user['name'];
+
+            // Generate a random reference tracing number
+            $referenceNumber = uniqid('REF') . mt_rand(100000, 999999);
+
+            // Insert booking details into the database
+            $insertBookingSql = "INSERT INTO bookings (tour_id, user_id, user_name, user_email, reference_number) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($insertBookingSql);
+            $stmt->bind_param("iisss", $tourId, $userId, $userName, $userEmail, $referenceNumber);
+
+            if ($stmt->execute()) {
+                // Booking successful
+                echo '<script>alert("Booking successful, we shall contact you soon! Your Reference Number is: ' . $referenceNumber . '");</script>';
+            } else {
+                // Booking failed
+                echo '<script>alert("Error: ' . $stmt->error . '");</script>';
+            }
+        } else {
+            // User not found with the provided email
+            echo "User not found!";
+        }
+    } else {
+        // User email is not set in the session
+        echo '<script>alert("You must be logged in to book a tour.");<script>';
     }
-
-    return $trackingNumber;
+} else {
+    // Tour ID not provided in the GET request
+    echo '<script>alert("Tour ID not provided!");<alert>';
 }
 ?>
