@@ -3,6 +3,15 @@ session_start();
 include_once('connection.php');
 include_once('auth_functions.php');
 
+session_start();
+
+// Check if the user is not logged in
+if (!isset($_SESSION['name'])) {
+    // Redirect the user to the login page
+    header("Location: auth/login.php");
+    exit(); // Stop further execution of the script
+}
+
 
 ?>
 
@@ -127,10 +136,24 @@ include_once('auth_functions.php');
             font-weight: bold;
             cursor: pointer;
         }
+        /* Logout button styles */
+.logout-btn {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
     </style>
 </head>
 <body>
-
 <header>
     <div class="nav-links">
         <div>
@@ -141,8 +164,8 @@ include_once('auth_functions.php');
         <div class="user-info">
             <?php
             if (isset($_SESSION['name'])) {
-                echo '<span>Welcome, ' . $_SESSION['name'] . '</span>';
-              
+                echo '<span>Welcome, ' . $_SESSION['username'] . '</span>';
+                echo '<a href="logout.php" class="logout-btn">Logout</a>'; // Add logout button
             } else {
                 echo '<a href="auth/login.php">Login</a>';
             }
@@ -150,6 +173,7 @@ include_once('auth_functions.php');
         </div>
     </div>
 </header>
+
 
 <!-- Tour cards section -->
 <?php

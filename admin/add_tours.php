@@ -9,7 +9,25 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+        nav a:hover {
+            background-color: #555;
         }
         form {
             width: 400px;
@@ -17,6 +35,7 @@
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            margin-top: 20px;
         }
         input[type="text"], textarea {
             width: 100%;
@@ -44,6 +63,16 @@
     </style>
 </head>
 <body>
+
+<header>
+    <h1>Navigation Header</h1>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+    </nav>
+</header>
 
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data">
     <h2>Create Tour</h2>
@@ -108,33 +137,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (move_uploaded_file($_FILES["tour_image"]["tmp_name"], $targetFile)) {
         // Image uploaded successfully, now insert the tour details into the database
-        $tour_image = $targetFile;
+            // Image uploaded successfully, now insert the tour details into the database
+            $tour_image = $targetFile;
 
-        // Prepare SQL statement to insert data into the tours table
-        $sql = "INSERT INTO tours (tour_name, tour_description, tour_price, tour_duration, tour_location, tour_guide, tour_image) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        // Use a prepared statement to prevent SQL injection
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssss", $tour_name, $tour_description, $tour_price, $tour_duration, $tour_location, $tour_guide, $tour_image);
-
-        // Execute the SQL query
-        if ($stmt->execute()) {
-            echo "<p>New tour created successfully</p>";
+            // Prepare SQL statement to insert data into the tours table
+            $sql = "INSERT INTO tours (tour_name, tour_description, tour_price, tour_duration, tour_location, tour_guide, tour_image) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+            // Use a prepared statement to prevent SQL injection
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssss", $tour_name, $tour_description, $tour_price, $tour_duration, $tour_location, $tour_guide, $tour_image);
+    
+            // Execute the SQL query
+            if ($stmt->execute()) {
+                echo "<p>New tour created successfully</p>";
+            } else {
+                echo "<p>Error: " . $stmt->error . "</p>";
+            }
+    
+            // Close the statement
+            $stmt->close();
         } else {
-            echo "<p>Error: " . $stmt->error . "</p>";
+            echo "<p>Sorry, there was an error uploading your file.</p>";
         }
-
-        // Close the statement
-        $stmt->close();
-    } else {
-        echo "<p>Sorry, there was an error uploading your file.</p>";
+    
+        // Close the database connection
+        $conn->close();
     }
-
-    // Close the database connection
-    $conn->close();
-}
-?>
-
-</body>
-</html>
+    ?>
+    
+    </body>
+    </html>
+    

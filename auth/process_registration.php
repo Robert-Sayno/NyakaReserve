@@ -4,8 +4,7 @@ include_once('connection.php');
 include_once('auth_functions.php');
 
 // Check if the 'register' key is set in the POST request.
-if(isset($_POST['register']))
-{
+if(isset($_POST['register'])) {
     // Retrieve user input from the POST request.
     $name = $_POST['name'];
     $username = $_POST['username'];
@@ -22,7 +21,7 @@ if(isset($_POST['register']))
     }
 
     // Check if the username already exists in the 'admins' table.
-    $checkUsernameQuery = "SELECT * FROM `admins` WHERE `username`='$username'";
+    $checkUsernameQuery = "SELECT * FROM `tbl_user` WHERE `username`='$username'";
     $checkUsernameResult = mysqli_query($conn, $checkUsernameQuery);
 
     if(mysqli_num_rows($checkUsernameResult) > 0) {
@@ -36,7 +35,7 @@ if(isset($_POST['register']))
     // Hash the password using password_hash for secure password hashing.
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // SQL query to insert user information into the 'admins' table.
+    // SQL query to insert user information into the 'tbl_user' table.
     $sql = "INSERT INTO `tbl_user`(`name`, `username`, `password`) VALUES ('$name','$username','$hashedPassword')";
     
     // Execute the SQL query.
